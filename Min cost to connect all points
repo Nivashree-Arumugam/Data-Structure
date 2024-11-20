@@ -1,0 +1,140 @@
+
+typedef struct {
+    int u, v, weight;
+} Edge;
+
+typedef struct {
+    Edge* data;
+    int size;
+    int capacity;
+} MinHeap;
+
+MinHeap* createMinHeap(int capacity) {
+    MinHeap* heap = (MinHeap*)malloc(sizeof(MinHeap));
+    heap->data = (Edge*)malloc(sizeof(Edge) * capacity);
+    heap->size = 0;
+    heap->capacity = capacity;
+    return heap;
+}
+
+void swapEdges(Edge* a, Edge* b) {
+    Edge temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+void minHeapify(MinHeap* heap, int idx) {
+    int smallest = idx;
+    int left = 2 * idx + 1;
+    int right = 2 * idx + 2;
+
+    if (left < heap->size && heap->data[left].weight < heap->data[smallest].weight)
+        smallest = left;
+
+    if (right < heap->size && heap->data[right].weight < heap->data[smallest].weight)
+        smallest = right;
+
+    if (smallest != idx) {
+        swapEdges(&heap->data[smallest], &heap->data[idx]);
+        minHeapify(heap, smallest);
+    }
+}
+
+void pushHeap(MinHeap* heap, Edge edge) {
+    if (heap->size == heap->capacity) {
+        fprintf(stderr, "Heap capacity exceeded\n");
+        return;
+    }
+    int i = heap->size++;
+    heap->data[i] = edge;
+
+    while (i > 0 && heap->data[i].weight < heap->data[(i - 1) / 2].weight) {
+        swapEdges(&heap->data[i], &heap->data[(i - 1) / 2]);
+        i = (i - 1) / 2;
+    }
+}
+
+Edge popHeap(MinHeap* heap) {
+    if (heap->size == 0) {
+        fprintf(stderr, "Heap is empty\n");
+        exit(1);
+    }
+    Edge root = heap->data[0];
+    heap->data[0] = heap->data[--heap->size];
+    minHeapify(heap, 0);
+    return root;
+}
+
+int find(int* parent, int n) {
+    if (parent[n] == n)
+        return n;
+    return parent[n] = find(parent, parent[n]);
+}
+
+void unionSet(int u, int v, int* parent, int* rank) {
+    u = find(parent, u);
+    v = find(parent, v);
+    if (rank[u] < rank[v])
+        parent[u] = v;
+    else if (rank[v] < rank[u])
+        parent[v] = u;
+    else {
+        parent[v] = u;
+        rank[u]++;
+    }
+}
+
+void makeSet(int parent[], int rank[], int n) {
+    for (int i = 0; i < n; i++) {
+        parent[i] = i;
+        rank[i] = 0;
+    }
+}
+
+int kruskal(int nodeNum, int edgeNum, MinHeap* heap) {
+    int parent[nodeNum];
+    int rank[nodeNum];
+    makeSet(parent, rank, nodeNum);
+
+    int minCost = 0;
+    int edgesUsed = 0;
+
+    while (edgesUsed < nodeNum - 1 && heap->size > 0) {
+        Edge edge = popHeap(heap);
+        int u = edge.u;
+        int v = edge.v;
+        int weight = edge.weight;
+
+        int rootU = find(parent, u);
+        int rootV = find(parent, v);
+
+        if (rootU != rootV) {
+            unionSet(rootU, rootV, parent, rank);
+            minCost += weight;
+            edgesUsed++;
+        }
+    }
+    return minCost;
+}
+
+int minCostConnectPoints(int** points, int pointsSize, int* pointsColSize) {
+    int arrSize = ((pointsSize - 1) * pointsSize) / 2;
+    MinHeap* heap = createMinHeap(arrSize);
+
+    for (int i = 0; i < pointsSize - 1; i++) {
+        for (int j = i + 1; j < pointsSize; j++) {
+            int ix = points[i][0], iy = points[i][1];
+            int jx = points[j][0], jy = points[j][1];
+            int weight = abs(ix - jx) + abs(iy - jy);
+            Edge edge = {i, j, weight};
+            pushHeap(heap, edge);
+        }
+    }
+
+    int result = kruskal(pointsSize, arrSize, heap);
+
+    free(heap->data);
+    free(heap);
+
+    return result;
+}
