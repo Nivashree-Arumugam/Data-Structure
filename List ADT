@@ -1,0 +1,17 @@
+#include <stdio.h> void revArray()
+{
+int arr[]={1,2,3,4,5};
+int len=sizeof(arr)/sizeof(arr[0]); printf("Original order: \n"); for(int i=0;i<len;i++)
+{
+printf("%d",arr[i]);
+}
+printf ("\n"); printf("Reversed order: \n"); for(int i=len-1;i>=0;i--)
+{
+printf("%d",arr[i]);
+}
+} ,
+int main()
+{
+revArray(); return 0;
+
+
