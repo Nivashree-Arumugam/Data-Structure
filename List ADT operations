@@ -1,0 +1,64 @@
+#include<stdio.h> int i=0;
+int Index=0; int size=0;
+int evensum=0; int target=0;
+int elements [1000]; int ch=-1;
+void insert()
+{
+printf("Enter element: "); scanf("%d",&elements [size]); printf("%d\n", elements[size]);
+}
+void Delete()
+{
+printf("Enter the index of element to delete [0,%d]",size-1); scanf("%d", &Index);
+for (i=Index;i-size-1;i++) elements[i]=elements[i+1];
+}
+void display()
+ {
+printf("All elements :\n"); for (i=0;i<=size-1;i++) printf("%d", elements[i]); printf("\n");
+}
+void search()
+{
+printf("Enter the element to search :"); scanf("%d", &target);
+for(i=0;i=size-1;i++) if(target==elements[i]) printf("Index %d : %d\n",i, target);
+}
+void displayeven()
+{
+printf("Even elements : \n"); for (i=0;i<size;i++) if(elements[i]%2==0) printf("%d ",elements[1]); printf("\n");
+}
+void sum_of_even()
+{
+for(i=0;i<size;i++) if(elements[i]%2==0) evensum+=elements[1];
+printf("The sum of even elements: %d\n",evensum);
+}
+void reverse()
+{
+printf("Elements in reverse order :\n"); for (i=size-1;i>=0;i--)
+printf("%d ",elements[1]); printf("\n");
+}
+int main()
+{
+while(ch!=9){ printf("1. Insert\n"); printf("2. Delete\n"); printf("3. Display\n"); printf("4. Search\n");
+printf("6. Display an even element only\n"); printf("7. Calculate the sum of even elements\n");
+printf("8. Display the elements in the reverse order\n");
+
+printf("9. Exit\n");
+scanf("%d",&ch); switch(ch) {
+case 1:
+insert(); size++; break;
+case 2:
+Delete();
+size--;
+printf("\nThe element has been deleted.\n"); break;
+case 3:
+display(); break;
+case 4:
+search(); break; case 6:
+displayeven(); break;
+case 7:
+sum_of_even(); break;
+case 8:
+reverse(); break;
+case 9:
+break; default:
+printf("Wrong selection.\n"); break;
+}	return 0;
+}
