@@ -1,0 +1,39 @@
+#include<stdio.h> int main()
+{
+int i=0;
+int index=0; int size=0; int target=0;
+int elements [1000]; int ch=-1; while(ch!=5)
+{
+printf("1. Insert\n"); printf("2. Delete\n"); printf("3. Display\n"); printf("4. Search\n"); printf("5. Exit\n");
+scanf("%d", &ch); switch(ch)
+{
+case 1:
+ 
+printf("Enter element: "); scanf("%d", &elements [size]); printf("%d\n",elements[size]); size;
+break; case 2:
+printf("Enter index of element to delete [0,%d]: ", (size-1)); scanf("%d",&index);
+for (i=index; i<size-1;i++)
+{
+elements[i]=elements[i+1]; size--;
+}
+printf("\nThe element has been deleted.\n"); break;
+case 3:
+printf("All elements: \n"); for (i=0; i<size; i++)
+{
+printf("%d ",elements[i]);
+}
+printf("\n"); break;
+case 4:
+printf("Enter the element to search: "); scanf("%d", &target);
+for (i=0; i<size; i )
+{
+if(target==elements[i]) printf("Index %d %d\n",i,target);
+}
+break; case 5:
+default:
+break;
+printf("Wrong selection.\n"); break;
+}
+return 0;
+}
+}
